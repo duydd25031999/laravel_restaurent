@@ -193,8 +193,10 @@ https://templatemo.com/tm-558-klassy-cafe
     </section>
     <!-- ***** About Area Ends ***** -->
 
+    @include("food")
+
     <!-- ***** Menu Area Starts ***** -->
-    <section class="section" id="menu">
+    {{-- <section class="section" id="menu">
         <div class="container">
             <div class="row">
                 <div class="col-lg-4">
@@ -295,7 +297,7 @@ https://templatemo.com/tm-558-klassy-cafe
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
     <!-- ***** Menu Area Ends ***** -->
 
     <!-- ***** Chefs Area Starts ***** -->
