@@ -1,0 +1,61 @@
+version: "3"
+
+# 1. Tạo network chung cho project -> kết nối với từng service
+networks:
+  laravel-network:
+    driver: bridge
+
+# 6. Setup source code volumne 
+
+services:
+  my-mysql:
+    container_name: mysql_container
+    image: mysql:latest
+    networks:
+      - laravel-network
+    ports:
+      - 3306:3306
+    restart: always
+    tty: true
+    env_file:
+      - ".env"
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+
+  my-php:
+    container_name: php_container
+    networks:
+      - laravel-network
+    ports: 
+      - "9000:9000"
+    volumes:
+      - ./:/var/www/html
+    restart: unless-stopped
+    tty: true
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+
+  # 2. Liệt kê các services cần cho projects
+  my-nginx:
+    container_name: nginx_container
+    networks:
+      - laravel-network
+    # 3. Thiết lập thứ tự run của containers
+    depends_on: # đợi containers khác run trước rồi mới chạy 
+      - my-mysql
+      - my-php
+    # 4. Tìm iamge phù hợp cho từng
+    image: nginx:stable-alpine
+    # 5. Port để lẵng nghe giữa các container và giữa container với host
+    ports: 
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    # 7. Các options khác
+    restart: unless-stopped
+
+
+    
