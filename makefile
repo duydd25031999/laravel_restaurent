@@ -8,6 +8,8 @@ up:
 	docker-compose up
 down:
 	docker-compose down
+stop:
+	docker-compose stop
 mysql-bash:
 	docker exec -it mysql_container mysql -uroot -pabc
 docker-migrate:
