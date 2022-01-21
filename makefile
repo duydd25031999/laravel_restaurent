@@ -16,3 +16,5 @@ php-bash:
 	docker exec -it php_container bash
 make-container:
 	docker exec php_container php artisan make:controller ${name}
+vendor-telegram:
+	docker exec php_container php artisan vendor:publish --provider="Telegram\Bot\Laravel\TelegramServiceProvider"

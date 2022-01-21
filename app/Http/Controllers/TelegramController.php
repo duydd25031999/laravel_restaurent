@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Traits\MakeComponentsTrait;
 use App\Traits\RequestTrait;
+use Exception;
 use Illuminate\Http\Request;
-use Longman\TelegramBot\Telegram;
+use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramController extends Controller
 {
@@ -31,11 +32,11 @@ class TelegramController extends Controller
         }
     }
 
-    // public function webhook() {
-    //     return $this->apiRequest("setWebhook", [
-    //         "url" => url(route("webhook")),
-    //     ]);
-    // }
+    public function webhook() {
+        return $this->apiRequest("setWebhook", [
+            "url" => url(route("webhook")),
+        ]);
+    }
 
     public function demo() {
         return $this->apiRequest("setWebhook", [
@@ -43,21 +44,24 @@ class TelegramController extends Controller
         ]);
     }
 
-    public function webhook() {
+    public function getUpdates() {
+        $activity = Telegram::getUpdates();
+        return $activity;
+    }
+
+    public function sendMessage(Request $request) {
         try {
-            // Create Telegram API object
-            $telegram = new Telegram(env("TELEGRAM_TOKEN"), "@laravel_duydd25031999_demo1_bot");
-        
-            // Set webhook
-            // $result = $telegram->setWebhook($hook_url);
-            $telegram->handle();
-            dd($telegram);
-            if ($result->isOk()) {
-                return $result->getDescription();
-            }
-        } catch (Longman\TelegramBot\Exception\TelegramException $e) {
-            // log telegram errors
-            // echo $e->getMessage();
+            $param = $request->all();
+            $res = Telegram::sendMessage([
+                "chat_id" => $param["chat_id"],
+                "parse_mode" => "HTML",
+                "text" => $param["text"],
+            ]);
+            return $res;
+        } catch (Exception $e) {
+            dd($e->getMessage());
         }
+        
+
     }
 }

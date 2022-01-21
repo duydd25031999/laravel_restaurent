@@ -21,3 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 $telegramUri = "/" . env("TELEGRAM_TOKEN");
 Route::any($telegramUri, [TelegramController::class, "index"])->name("webhook");
+Route::any("get-updates", [TelegramController::class, "getUpdates"]);
+Route::post("send-message", [TelegramController::class, "sendMessage"]);
